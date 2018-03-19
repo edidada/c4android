@@ -15,7 +15,7 @@
 ### 1. 安装NDK；
 ### 2. 编写hello.c源文件
 
----
+---c
 #include <stdio.h>
 int main() {
         printf("hello, arm c world!\n");
@@ -30,7 +30,7 @@ b. 进入workspace，新建目录jni；
 c. 进入jni，新建hello.c文件，输入源文件内容；
 d. 新建Android.mk文件，内容如下：
 
----
+---shell
 
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
@@ -44,7 +44,7 @@ e. 运行ndk-build命令，可看到在workspace目录下生成了libs和obj两�
 
 ### 4. 放到android设备上运行
 
----
+---shell
 adb push test /data/local/tmp/test
 
 adb shell /data/local/tmp/test
