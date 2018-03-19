@@ -15,14 +15,14 @@
 ### 1. 安装NDK；
 ### 2. 编写hello.c源文件
 
----c
+```c
 #include <stdio.h>
 int main() {
         printf("hello, arm c world!\n");
         return 0;
 }
 
----
+```
 
 ### 3.可以直接使用ndk-build命令来编译
 a. 新建目录 workspace;
@@ -30,7 +30,7 @@ b. 进入workspace，新建目录jni；
 c. 进入jni，新建hello.c文件，输入源文件内容；
 d. 新建Android.mk文件，内容如下：
 
----shell
+```shell
 
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
@@ -38,18 +38,18 @@ LOCAL_SRC_FILES:= hello.c
 LOCAL_MODULE := libtest
 include $(BUILD_EXECUTABLE)
 
----
+```
 
 e. 运行ndk-build命令，可看到在workspace目录下生成了libs和obj两个目录，libs下对应的armeabi文件夹下有生成的可执行文件 test
 
 ### 4. 放到android设备上运行
 
----shell
+```shell
 adb push test /data/local/tmp/test
 
 adb shell /data/local/tmp/test
 
----
+```
 
 ### 5、修改权限
 但如果尝试在sdcard 中运行程序多半会遇到一个Permision Denied一个错误。
@@ -68,7 +68,7 @@ adb shell /data/local/tmp/test
 
 ### 6. 看到输出结果：
 
----
+```
 hello, arm c world!
 
----
+```
