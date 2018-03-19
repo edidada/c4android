@@ -1,7 +1,7 @@
 
 [创建文件参考博文](http://blog.csdn.net/the01hierarch/article/details/24989725)
 [编译文件参考博文](http://blog.csdn.net/wangzhiyu1980/article/details/16972937)
-
+[win下使用ndk-build.cmd的方案](http://blog.csdn.net/daizhongyin/article/details/52795561)
 
 - windows平台下创建c文件
 - 使用安卓交叉编译工具编译
@@ -13,7 +13,7 @@
 ### 1. 安装NDK；
 ### 2. 编写hello.c源文件
 
----c
+---
 #include <stdio.h>
 int main() {
         printf("hello, arm c world!\n");
