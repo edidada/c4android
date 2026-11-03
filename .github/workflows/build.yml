@@ -1,0 +1,60 @@
+name: Build & Run on Android Emulator
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install NDK
+        run: |
+          yes | sdkmanager --licenses
+          sdkmanager "ndk;25.2.9519653"
+
+      - name: Build with ndk-build (x86_64)
+        run: |
+          NDK_DIR="${ANDROID_HOME:-$ANDROID_SDK_ROOT}/ndk/25.2.9519653"
+          "$NDK_DIR/ndk-build" APP_ABI=x86_64 APP_PLATFORM=android-21
+          echo '--- built binaries ---'
+          find libs -type f
+
+      - name: Upload built binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-binaries
+          path: libs/**
+
+      - name: Run on x86_64 emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel
+          cores: 2
+          script: |
+            adb push libs/x86_64/test /data/local/tmp/test
+            adb shell chmod 755 /data/local/tmp/test
+            echo '=== running test binary on emulator ==='
+            adb shell /data/local/tmp/test | tee run_output.log
+            echo '=== done ==='
+            adb exec-out screencap -p > screenshot.png
+            echo 'screenshot saved to screenshot.png'
+
+      - name: Upload run output & screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emulator-run
+          path: |
+            run_output.log
+            screenshot.png
