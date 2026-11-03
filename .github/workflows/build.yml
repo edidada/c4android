@@ -57,7 +57,10 @@ jobs:
           target: default
           arch: x86_64
           profile: pixel
-          cores: 2
+          cores: 1
+          ram-size: 2048
+          disable-linux-hw-accel: true
+          emulator-boot-timeout: 1800
           script: |
             adb push libs/x86_64/test /data/local/tmp/test
             adb shell chmod 755 /data/local/tmp/test
