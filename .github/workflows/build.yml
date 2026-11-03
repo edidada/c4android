@@ -1,4 +1,4 @@
-name: Build & Run on Android Emulator (macOS)
+name: Build & Run on Android Emulator
 
 on:
   push:
@@ -11,7 +11,7 @@ env:
 
 jobs:
   build-and-run:
-    runs-on: macos-13
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,10 +22,10 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Install stable Android cmdline-tools (macOS)
+      - name: Install stable Android cmdline-tools (Linux)
         run: |
           mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
-          curl -fsSL -o ct.zip https://dl.google.com/android/repository/commandlinetools-mac-11076708_latest.zip
+          curl -fsSL -o ct.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
           unzip -q ct.zip -d "$ANDROID_SDK_ROOT/cmdline-tools"
           mv "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" "$ANDROID_SDK_ROOT/cmdline-tools/latest"
           echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
@@ -50,7 +50,7 @@ jobs:
           name: android-binaries
           path: libs/**
 
-      - name: Run on x86_64 emulator
+      - name: Run on x86_64 emulator (KVM hardware-accelerated)
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30
@@ -58,6 +58,7 @@ jobs:
           arch: x86_64
           profile: pixel
           cores: 2
+          emulator-boot-timeout: 600
           script: |
             adb push libs/x86_64/test /data/local/tmp/test
             adb shell chmod 755 /data/local/tmp/test
