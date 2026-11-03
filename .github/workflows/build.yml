@@ -1,4 +1,4 @@
-name: Build & Run on Android Emulator
+name: Build & Run on Android Emulator (macOS, HVF)
 
 on:
   push:
@@ -11,7 +11,7 @@ env:
 
 jobs:
   build-and-run:
-    runs-on: ubuntu-24.04
+    runs-on: macos-15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,10 +22,10 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Install stable Android cmdline-tools (Linux)
+      - name: Install stable Android cmdline-tools (macOS)
         run: |
           mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
-          curl -fsSL -o ct.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          curl -fsSL -o ct.zip https://dl.google.com/android/repository/commandlinetools-mac-11076708_latest.zip
           unzip -q ct.zip -d "$ANDROID_SDK_ROOT/cmdline-tools"
           mv "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" "$ANDROID_SDK_ROOT/cmdline-tools/latest"
           echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
@@ -35,12 +35,12 @@ jobs:
       - name: Install NDK, platform-tools, emulator, system image
         run: |
           yes | sdkmanager --licenses
-          sdkmanager "platform-tools" "emulator" "ndk;25.2.9519653" "system-images;android-30;default;x86_64"
+          sdkmanager "platform-tools" "emulator" "ndk;25.2.9519653" "system-images;android-30;default;arm64-v8a"
 
-      - name: Build with ndk-build (x86_64)
+      - name: Build with ndk-build (arm64)
         run: |
           NDK_DIR="$ANDROID_SDK_ROOT/ndk/25.2.9519653"
-          "$NDK_DIR/ndk-build" APP_ABI=x86_64 APP_PLATFORM=android-21
+          "$NDK_DIR/ndk-build" APP_ABI=arm64-v8a APP_PLATFORM=android-21
           echo '--- built binaries ---'
           find libs -type f
 
@@ -50,17 +50,17 @@ jobs:
           name: android-binaries
           path: libs/**
 
-      - name: Run on x86_64 emulator (KVM hardware-accelerated)
+      - name: Run on arm64 emulator (HVF hardware-accelerated)
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30
           target: default
-          arch: x86_64
+          arch: arm64-v8a
           profile: pixel
           cores: 2
           emulator-boot-timeout: 600
           script: |
-            adb push libs/x86_64/test /data/local/tmp/test
+            adb push libs/arm64-v8a/test /data/local/tmp/test
             adb shell chmod 755 /data/local/tmp/test
             echo '=== running test binary on emulator ==='
             adb shell /data/local/tmp/test | tee run_output.log
