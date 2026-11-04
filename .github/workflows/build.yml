@@ -4,6 +4,11 @@ on:
   push:
     branches: [ master ]
   workflow_dispatch:
+    inputs:
+      run-emulator:
+        description: 'Also launch the Android emulator (requires HW virtualization: KVM/HVF)'
+        type: boolean
+        default: false
 
 env:
   ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
@@ -50,7 +55,9 @@ jobs:
           name: android-binaries
           path: libs/**
 
-      - name: Run on arm64 emulator (HVF hardware-accelerated)
+      - name: Run on arm64 emulator (best-effort; needs HW virtualization)
+        if: ${{ inputs.run-emulator == true }}
+        continue-on-error: true
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30
