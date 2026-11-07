@@ -2,5 +2,11 @@
 libs/
 obj/
 
+# host test build output
+build-host/
+
+# SQLite amalgamation fetched by scripts/fetch-sqlite3.sh
+thirdparty/sqlite3/
+
 # local emulator artifacts
 *.log

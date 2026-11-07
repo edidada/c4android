@@ -1,0 +1,3 @@
+[submodule "thirdparty/tbox"]
+	path = thirdparty/tbox
+	url = https://github.com/tboox/tbox.git
