@@ -72,3 +72,32 @@ adb shell /data/local/tmp/test
 hello, arm c world!
 
 ```
+---
+
+## tbox 数据库连接测试
+
+在原来的 hello 程序基础上增加了 [tbox](https://github.com/tboox/tbox) 与 SQLite，
+用 tbox 的 database API 实际打开一个 SQLite 数据库并执行 SQL。
+
+目录说明：
+
+- `thirdparty/tbox`：tbox 源码（git submodule）
+- `scripts/fetch-sqlite3.sh`：从 sqlite.org 下载官方 SQLite amalgamation 到 `thirdparty/sqlite3/`
+- `config/`：手写的 tbox 配置（`android/`、`host/`）以及 tbox 源文件列表 `tbox_sources.mk`
+- `jni/Android.mk`：ndk-build 构建 `libtbox.a`、`libsqlite3.a` 和 `test`
+- `jni/main.c`：调用 `tb_database_sql_init` / `tb_database_sql_open` /
+  `tb_database_sql_done` / `tb_database_sql_result_load` 的测试程序
+- `tests/host/Makefile`：用同一份代码在 Linux 本机编译并运行
+
+测试内容：打开 `/data/local/tmp/tbox_test.db`（Android）或构建目录下的
+`tbox_test.db`（host），建表、插入两行、查询并打印结果，最后输出
+`DB CONNECTION TEST: PASS` 或 `FAIL`。
+
+CI（`.github/workflows/build.yml`）：
+
+- `android-build`：用 ndk-build 交叉编译 arm64-v8a / x86_64 的 `test`
+- `host-run`：在 Linux 上编译并**实际运行**数据库连接测试
+- `emulator-run`：手动触发时（`run-emulator=true`）尝试在模拟器中运行；
+  GitHub 托管 runner 通常没有嵌套虚拟化，因此仅作尽力而为
+
+本项目不使用本地编译，编译和运行均通过 GitHub Actions 完成。
