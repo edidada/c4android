@@ -23,7 +23,6 @@
 #define _REENTRANT                  1
 
 /* types */
-#define TB_CONFIG_TYPE_HAVE_WCHAR   1
 #define TB_CONFIG_TYPE_HAVE_FLOAT   1
 
 /* features */

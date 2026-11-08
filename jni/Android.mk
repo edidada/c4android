@@ -9,7 +9,9 @@
 LOCAL_PATH := $(call my-dir)
 TB_ROOT    := $(LOCAL_PATH)/..
 
-TB_SRC_DIR      := ../thirdparty/tbox/src
+# LOCAL_C_INCLUDES must be absolute (relative paths are resolved against the
+# directory ndk-build is invoked from, not against LOCAL_PATH).
+TB_SRC_DIR      := $(TB_ROOT)/thirdparty/tbox/src
 TB_SRC_REL      := ../thirdparty/tbox/src/tbox
 TB_CONFIG_DIR   := $(TB_ROOT)/config/android
 TB_SQLITE_DIR   := $(TB_ROOT)/thirdparty/sqlite3

@@ -24,7 +24,6 @@
 #define _REENTRANT                  1
 
 /* types */
-#define TB_CONFIG_TYPE_HAVE_WCHAR   1
 #define TB_CONFIG_TYPE_HAVE_FLOAT   1
 
 /* features */
@@ -144,7 +143,8 @@
 #define TB_CONFIG_POSIX_HAVE_WRITEV              1
 #define TB_CONFIG_POSIX_HAVE_FDATASYNC           1
 #define TB_CONFIG_POSIX_HAVE_SENDFILE            1
-#define TB_CONFIG_POSIX_HAVE_POSIX_SPAWNP        1
+/* posix_spawn is hidden behind __INTRODUCED_IN(28) in the NDK headers
+ * when APP_PLATFORM=24, so let tbox use its fork/exec fallback instead. */
 #define TB_CONFIG_POSIX_HAVE_EXECVP              1
 #define TB_CONFIG_POSIX_HAVE_EXECVPE             1
 #define TB_CONFIG_POSIX_HAVE_FORK                1
