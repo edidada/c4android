@@ -38,7 +38,7 @@ LOCAL_MODULE     := tbox
 LOCAL_SRC_FILES  := $(addprefix $(TB_SRC_REL)/,$(TBOX_SRCFILES)) \
                     $(TB_SRC_REL)/platform/android/android.c \
                     $(TB_SRC_REL)/platform/android/directory.c
-LOCAL_C_INCLUDES := $(TB_SRC_DIR) $(TB_CONFIG_DIR)
+LOCAL_C_INCLUDES := $(TB_SRC_DIR) $(TB_CONFIG_DIR) $(TB_SQLITE_DIR)
 LOCAL_CFLAGS     := -fPIC
 include $(BUILD_STATIC_LIBRARY)
 
